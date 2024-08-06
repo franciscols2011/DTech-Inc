@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getPosts, logout } from '../api';
 import Post from './Post';
@@ -13,18 +13,20 @@ const Posts = () => {
   const navigate = useNavigate();
   const [order, setOrder] = useState('newest');
   const [searchTerm, setSearchTerm] = useState('');
+  const observer = useRef();
+
+  const fetchPosts = useCallback(async () => {
+    try {
+      const { data } = await getPosts({ order, searchTerm });
+      setPosts(data);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [order, searchTerm]);
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const { data } = await getPosts({ order, searchTerm });
-        setPosts(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
     fetchPosts();
-  }, [order, searchTerm]);
+  }, [fetchPosts]);
 
   const handleOrderChange = () => {
     setOrder(order === 'newest' ? 'oldest' : 'newest');
@@ -44,6 +46,19 @@ const Posts = () => {
     }
   };
 
+  const lastPostElementRef = useCallback(
+    (node) => {
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          fetchPosts();
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [fetchPosts]
+  );
+
   return (
     <>
       <Navbar handleLogout={handleLogout} handleSearch={handleSearch} />
@@ -51,12 +66,12 @@ const Posts = () => {
         <div className="container py-5 h-100">
           <div className="d-flex justify-content-end mb-4">
             <button onClick={handleOrderChange} className="btn btn-outline-light btn-lg px-5">
-              {order === 'newest' ? 'Mostrar más antiguos' : 'Mostrar más recientes'}
+              {order === 'newest' ? 'Show older' : 'Show most recent'}
             </button>
           </div>
           <div className="post-list">
-            {posts.map((post) => (
-              <Post key={post.id} post={post} />
+            {posts.map((post, index) => (
+              <Post key={post.id} post={post} ref={index === posts.length - 1 ? lastPostElementRef : null} />
             ))}
           </div>
         </div>

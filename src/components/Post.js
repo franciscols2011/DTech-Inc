@@ -4,7 +4,7 @@ import { likePost } from '../api';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/styles.css';
 
-const Post = ({ post }) => {
+const Post = React.forwardRef(({ post }, ref) => {
   const handleLike = async () => {
     try {
       await likePost(post.id);
@@ -14,15 +14,29 @@ const Post = ({ post }) => {
     }
   };
 
+  const timeSinceCreation = (date) => {
+    const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+    let interval = Math.floor(seconds / 3600);
+
+    if (interval > 1) {
+      return `${interval} hours ago`;
+    }
+    interval = Math.floor(seconds / 60);
+    if (interval > 1) {
+      return `${interval} minutes ago`;
+    }
+    return `${Math.floor(seconds)} seconds ago`;
+  };
+
   return (
-    <div className="post card mb-4">
+    <div className="post card mb-4" ref={ref}>
       <div className="post-header card-header d-flex justify-content-between align-items-center">
         <div className="d-flex align-items-center">
           <Link to={`/user/${post.author.id}`}>
             <img src={post.author.avatar} alt="N/P" className="rounded-circle" width="32" height="32" />
           </Link>
           <Link to={`/user/${post.author.id}`} className="ms-2 text-decoration-none text-dark">
-            <span>{post.author.name} {post.author.surname}</span>
+            <span className="fw-bold">{post.author.name} {post.author.surname}</span>
           </Link>
         </div>
         <div>{post.location}</div>
@@ -35,11 +49,11 @@ const Post = ({ post }) => {
         </div>
         <div className="post-footer-right">
           <p><strong>{post.author.username}</strong> {post.message}</p>
-          <small>{new Date(post.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</small>
+          <small>{timeSinceCreation(post.created_at)}</small>
         </div>
       </div>
     </div>
   );
-};
+});
 
 export default Post;
