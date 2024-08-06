@@ -1,0 +1,23 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run Flask",
+            "type": "shell",
+            "command": "python app.py",
+            "group": "build",
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": [],
+            "options": {
+                "env": {
+                    "FLASK_APP": "app.py",
+                    "FLASK_ENV": "development",
+                    "DATABASE_URL": "postgresql://username:password@localhost/yourdatabase",
+                    "SECRET_KEY": "your_secret_key"
+                }
+            }
+        }
+    ]
+}

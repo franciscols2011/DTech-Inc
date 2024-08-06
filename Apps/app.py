@@ -1,16 +1,42 @@
-from flask import Flask
+from flask import Flask, send_from_directory
+from flask_cors import CORS
 from config import Config
-from models import db
+from models import db, User
 from flask_login import LoginManager
+import os
+import logging
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../build', static_url_path='/')
 app.config.from_object(Config)
+
+# Inicializar CORS con credenciales
+CORS(app, supports_credentials=True)
+
 db.init_app(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-from routes import *
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+logging.basicConfig(level=logging.DEBUG)
+
+# Import routes after initializing app and db
+from routes import api
+app.register_blueprint(api, url_prefix='/api')
+
+@app.route('/')
+def serve():
+    return send_from_directory(app.static_folder, 'index.html')
+
+@app.route('/<path:path>')
+def serve_static(path):
+    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
 
 if __name__ == '__main__':
     with app.app_context():
