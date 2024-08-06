@@ -2,6 +2,7 @@ import React from 'react';
 import { likePost } from '../api';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/styles.css';
+import moment from 'moment';
 
 const Post = ({ post }) => {
   const handleLike = async () => {
@@ -30,7 +31,7 @@ const Post = ({ post }) => {
         </div>
         <div className="post-footer-right">
           <p><strong>{post.author.username}</strong> {post.message}</p> 
-          <small>{new Date(post.created_at).toLocaleString()}</small>
+          <small>{moment(post.created_at).fromNow()}</small>
         </div>
       </div>
     </div>

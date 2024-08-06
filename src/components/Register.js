@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { register } from '../api';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../styles/styles.css';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -20,7 +22,7 @@ const Register = () => {
     e.preventDefault();
     try {
       await register(formData);
-      navigate('/'); // Redireccionar después del registro exitoso
+      navigate('/login');  // Redirect to login after successful registration
     } catch (error) {
       console.error(error);
     }

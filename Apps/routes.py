@@ -76,13 +76,17 @@ def create_post():
     except Exception as e:
         logging.error(f"Error during creating post: {e}")
         return jsonify({"error": str(e)}), 500
-    
-    
+
 @api.route('/posts', methods=['GET'])
 @login_required
 def get_posts():
     try:
-        posts = Post.query.order_by(Post.created_at.desc()).all()
+        order = request.args.get('order', 'desc')
+        if order == 'asc':
+            posts = Post.query.order_by(Post.created_at.asc()).all()
+        else:
+            posts = Post.query.order_by(Post.created_at.desc()).all()
+
         return jsonify([{
             "id": post.id,
             "image": post.image,
@@ -101,6 +105,8 @@ def get_posts():
     except Exception as e:
         logging.error(f"Error during fetching posts: {e}")
         return jsonify({"error": str(e)}), 500
+
+
 @api.route('/like', methods=['POST'])
 @login_required
 def like_post():
@@ -112,11 +118,14 @@ def like_post():
         post = Post.query.get(post_id)
         if not post:
             return jsonify({"error": "Post not found"}), 404
-        if current_user in post.likes:
-            return jsonify({"error": "Already liked"}), 400
-        post.likes.append(current_user)
+        if current_user in post.liked_by:
+            post.liked_by.remove(current_user)
+            message = "Post unliked successfully"
+        else:
+            post.liked_by.append(current_user)
+            message = "Post liked successfully"
         db.session.commit()
-        return jsonify({"message": "Post liked successfully"}), 200
+        return jsonify({"message": message}), 200
     except Exception as e:
         logging.error(f"Error during liking post: {e}")
         return jsonify({"error": str(e)}), 500

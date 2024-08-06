@@ -10,27 +10,32 @@ const Posts = () => {
   const [posts, setPosts] = useState([]);
   const { setAuth } = useAuth();
   const navigate = useNavigate();
+  const [order, setOrder] = useState('desc');
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const { data } = await getPosts();
+        const { data } = await getPosts({ order });
         setPosts(data);
       } catch (error) {
         console.error(error);
       }
     };
     fetchPosts();
-  }, []);
+  }, [order]);
 
   const handleLogout = async () => {
     try {
       await logout();
       setAuth(null);
-      navigate('/');
+      navigate('/login');
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const toggleOrder = () => {
+    setOrder(order === 'desc' ? 'asc' : 'desc');
   };
 
   return (
@@ -39,12 +44,17 @@ const Posts = () => {
         <div className="d-flex justify-content-end mb-4">
           <button onClick={handleLogout} className="btn btn-outline-light btn-lg px-5">Logout</button>
         </div>
+        <div className="d-flex justify-content-center mb-4">
+          <button onClick={toggleOrder} className="btn btn-outline-light btn-lg px-5">
+            {order === 'desc' ? 'Mostrar más antiguos' : 'Mostrar más recientes'}
+          </button>
+        </div>
         <div className="post-list">
           {posts.map((post) => (
             <Post key={post.id} post={post} />
           ))}
         </div>
-        <div className="create-post text-center mt-4">
+        <div className="create-post">
           <a href="/create" className="btn btn-outline-light btn-lg px-5">Create Post</a>
         </div>
       </div>
