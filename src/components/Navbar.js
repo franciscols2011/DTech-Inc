@@ -1,22 +1,16 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../auth/AuthContext';
-import { logout } from '../api';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '../styles/styles.css';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-const Navbar = () => {
-  const { setAuth } = useAuth();
-  const navigate = useNavigate();
+const Navbar = ({ handleLogout, handleSearch }) => {
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const handleLogout = async () => {
-    try {
-      await logout();
-      setAuth(null);
-      navigate('/login');
-    } catch (error) {
-      console.error(error);
-    }
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    handleSearch(searchTerm);
   };
 
   return (
@@ -27,8 +21,8 @@ const Navbar = () => {
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
-          <form className="d-flex mx-auto">
-            <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+          <form className="d-flex mx-auto" onSubmit={handleSearchSubmit}>
+            <input className="form-control me-2" type="search" placeholder="Search by Location" aria-label="Search" value={searchTerm} onChange={handleSearchChange} />
             <button className="btn btn-outline-light" type="submit">Search</button>
           </form>
           <ul className="navbar-nav ms-auto">

@@ -4,7 +4,9 @@ body, html {
   padding: 0;
   font-family: Arial, sans-serif;
   overflow-x: hidden;
-  background-color: #6a11cb;
+  background: #6a11cb;
+  background: -webkit-linear-gradient(to right, #6a11cb, #2575fc);
+  background: linear-gradient(to right, #6a11cb, #2575fc)
 }
 
 .vh-100 {
@@ -60,8 +62,8 @@ body, html {
 
 .post-image {
   width: 100%;
-  height: auto; /* Ajusta la imagen dentro del post */
-  object-fit: cover; /* Mantiene la proporción y cubre el área */
+  height: auto; 
+  object-fit: cover; 
 }
 
 .post-footer {

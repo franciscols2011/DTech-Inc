@@ -1,16 +1,15 @@
 from flask import Flask, send_from_directory
-from flask_cors import CORS
 from config import Config
 from models import db, User
 from flask_login import LoginManager
+from flask_cors import CORS
 import os
 import logging
 
 app = Flask(__name__, static_folder='../build', static_url_path='/')
 app.config.from_object(Config)
 
-# Inicializar CORS con credenciales
-CORS(app, supports_credentials=True)
+CORS(app, supports_credentials=True)  # Asegura que supports_credentials sea True
 
 db.init_app(app)
 login_manager = LoginManager()
@@ -23,7 +22,7 @@ def load_user(user_id):
 
 logging.basicConfig(level=logging.DEBUG)
 
-# Import routes after initializing app and db
+# Importa las rutas después de inicializar app y db
 from routes import api
 app.register_blueprint(api, url_prefix='/api')
 

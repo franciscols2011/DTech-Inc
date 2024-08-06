@@ -81,11 +81,16 @@ def create_post():
 def get_posts():
     try:
         order = request.args.get('order', 'newest')
+        search_term = request.args.get('searchTerm', '')
+        logging.debug(f"Order received: {order}, Search term received: {search_term}")
+
+        query = Post.query.filter(Post.location.ilike(f'%{search_term}%'))
+
         if order == 'oldest':
-            posts = Post.query.order_by(Post.created_at.asc()).all()
+            posts = query.order_by(Post.created_at.asc()).all()
         else:
-            posts = Post.query.order_by(Post.created_at.desc()).all()
-        
+            posts = query.order_by(Post.created_at.desc()).all()
+
         return jsonify([{
             "id": post.id,
             "image": post.image,
@@ -104,6 +109,9 @@ def get_posts():
     except Exception as e:
         logging.error(f"Error during fetching posts: {e}")
         return jsonify({"error": str(e)}), 500
+
+
+
 
 @api.route('/like', methods=['POST'])
 @login_required
@@ -131,3 +139,37 @@ def like_post():
 @api.route('/test', methods=['GET'])
 def test():
     return "Hola Mundo", 200
+
+@api.route('/search', methods=['GET'])
+@login_required
+def search_posts():
+    try:
+        query = request.args.get('q', '')
+        if not query:
+            return jsonify([]), 200
+
+        posts = Post.query.join(User).filter(
+            (Post.message.ilike(f'%{query}%')) | 
+            (User.name.ilike(f'%{query}%')) | 
+            (User.surname.ilike(f'%{query}%'))
+        ).order_by(Post.created_at.desc()).all()
+
+        return jsonify([{
+            "id": post.id,
+            "image": post.image,
+            "message": post.message,
+            "author": {
+                "username": post.author.username,
+                "name": post.author.name,
+                "surname": post.author.surname,
+                "avatar": post.author.avatar
+            },
+            "created_at": post.created_at,
+            "location": post.location,
+            "status": post.status,
+            "likes": [user.username for user in post.liked_by]
+        } for post in posts]), 200
+    except Exception as e:
+        logging.error(f"Error during fetching posts: {e}")
+        return jsonify({"error": str(e)}), 500
+

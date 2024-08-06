@@ -17,7 +17,7 @@ const Post = ({ post }) => {
     <div className="post card mb-4">
       <div className="post-header card-header d-flex justify-content-between align-items-center">
         <div className="d-flex align-items-center">
-          <img src={post.author.avatar} alt="N/P" />
+          <img src={post.author.avatar} alt="Avatar" className="rounded-circle me-2" style={{ width: '32px', height: '32px' }} />
           <span>{post.author.name} {post.author.surname}</span>
         </div>
         <div>{post.location}</div>
