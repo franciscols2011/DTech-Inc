@@ -18,7 +18,7 @@ const Post = ({ post }) => {
       <div className="post-header">
         <div className="d-flex align-items-center">
           <img src={post.author.avatar} alt="Avatar" />
-          <span>{post.author.name} {post.author.surname}</span> {/* Displaying full name */}
+          <span>{post.author.name} {post.author.surname}</span> 
         </div>
         <div>{post.location}</div>
       </div>
@@ -29,7 +29,7 @@ const Post = ({ post }) => {
           <span>{post.likes.length} likes</span>
         </div>
         <div className="post-footer-right">
-          <p><strong>{post.author.username}</strong> {post.message}</p> {/* Using username here */}
+          <p><strong>{post.author.username}</strong> {post.message}</p> 
           <small>{new Date(post.created_at).toLocaleString()}</small>
         </div>
       </div>
