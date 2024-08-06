@@ -39,6 +39,7 @@ const CreatePost = () => {
                 <p className="text-white-50 mb-5">Please enter the details of your post!</p>
                 <form onSubmit={handleSubmit}>
                   <div className="form-outline form-white mb-4">
+                  <label className="form-label" htmlFor="typeImage">Image URL</label>
                     <input
                       type="text"
                       id="typeImage"
@@ -47,9 +48,9 @@ const CreatePost = () => {
                       required
                       onChange={handleChange}
                     />
-                    <label className="form-label" htmlFor="typeImage">Image URL</label>
                   </div>
                   <div className="form-outline form-white mb-4">
+                  <label className="form-label" htmlFor="typeMessage">Message</label>
                     <textarea
                       id="typeMessage"
                       name="message"
@@ -57,9 +58,9 @@ const CreatePost = () => {
                       required
                       onChange={handleChange}
                     ></textarea>
-                    <label className="form-label" htmlFor="typeMessage">Message</label>
                   </div>
                   <div className="form-outline form-white mb-4">
+                  <label className="form-label" htmlFor="typeLocation">Location</label>
                     <input
                       type="text"
                       id="typeLocation"
@@ -68,9 +69,9 @@ const CreatePost = () => {
                       required
                       onChange={handleChange}
                     />
-                    <label className="form-label" htmlFor="typeLocation">Location</label>
                   </div>
                   <div className="form-outline form-white mb-4">
+                  <label className="form-label" htmlFor="typeStatus">Status</label>
                     <select
                       id="typeStatus"
                       name="status"
@@ -82,7 +83,6 @@ const CreatePost = () => {
                       <option value="drafted">Drafted</option>
                       <option value="deleted">Deleted</option>
                     </select>
-                    <label className="form-label" htmlFor="typeStatus">Status</label>
                   </div>
                   <button className="btn btn-outline-light btn-lg px-5" type="submit">Create</button>
                 </form>

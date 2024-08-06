@@ -173,3 +173,5 @@ def search_posts():
         logging.error(f"Error during fetching posts: {e}")
         return jsonify({"error": str(e)}), 500
 
+
+

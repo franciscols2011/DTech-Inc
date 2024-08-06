@@ -2,6 +2,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import validates
 
 db = SQLAlchemy()
 
@@ -20,6 +21,21 @@ class User(db.Model, UserMixin):
     posts = db.relationship('Post', backref='author', lazy=True)
     liked_posts = db.relationship('Post', secondary=post_likes, backref=db.backref('liked_by', lazy='dynamic'))
 
+    @validates('username')
+    def validate_username(self, key, username):
+        assert len(username) >= 3 and len(username) <= 20, "Username must be between 3 and 20 characters."
+        return username
+
+    @validates('password_hash')
+    def validate_password(self, key, password):
+        assert len(password) >= 5 and len(password) <= 10, "Password must be between 5 and 10 characters."
+        return generate_password_hash(password)
+
+    @validates('name', 'surname')
+    def validate_name_surname(self, key, value):
+        assert len(value) >= 3 and len(value) <= 20, f"{key} must be between 3 and 20 characters."
+        return value
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
@@ -34,3 +50,18 @@ class Post(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     location = db.Column(db.String(30), nullable=False)
     status = db.Column(db.String(10), nullable=False)
+
+    @validates('message')
+    def validate_message(self, key, message):
+        assert len(message) >= 10 and len(message) <= 500, "Message must be between 10 and 500 characters."
+        return message
+
+    @validates('location')
+    def validate_location(self, key, location):
+        assert len(location) >= 4 and len(location) <= 30, "Location must be between 4 and 30 characters."
+        return location
+
+    @validates('status')
+    def validate_status(self, key, status):
+        assert status in ['drafted', 'deleted', 'published'], "Status must be one of 'drafted', 'deleted', or 'published'."
+        return status
