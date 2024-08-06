@@ -48,7 +48,6 @@ def login():
         logging.error(f"Error during login: {e}")
         return jsonify({"error": str(e)}), 500
 
-
 @api.route('/logout', methods=['GET'])
 @login_required
 def logout():
@@ -81,12 +80,12 @@ def create_post():
 @login_required
 def get_posts():
     try:
-        order = request.args.get('order', 'desc')
-        if order == 'asc':
+        order = request.args.get('order', 'newest')
+        if order == 'oldest':
             posts = Post.query.order_by(Post.created_at.asc()).all()
         else:
             posts = Post.query.order_by(Post.created_at.desc()).all()
-
+        
         return jsonify([{
             "id": post.id,
             "image": post.image,
@@ -100,12 +99,11 @@ def get_posts():
             "created_at": post.created_at,
             "location": post.location,
             "status": post.status,
-            "likes": [user.username for user in post.likes]
+            "likes": [user.username for user in post.liked_by]
         } for post in posts]), 200
     except Exception as e:
         logging.error(f"Error during fetching posts: {e}")
         return jsonify({"error": str(e)}), 500
-
 
 @api.route('/like', methods=['POST'])
 @login_required

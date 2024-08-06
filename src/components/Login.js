@@ -5,6 +5,7 @@ import { useAuth } from '../auth/AuthContext';
 
 const Login = () => {
   const [formData, setFormData] = useState({ username: '', password: '' });
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   const { setAuth } = useAuth();
 
@@ -12,14 +13,28 @@ const Login = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const validate = () => {
+    let formErrors = {};
+    if (!formData.username || formData.username.length < 3 || formData.username.length > 20) {
+      formErrors.username = "Username must be between 3 and 20 characters";
+    }
+    if (!formData.password || formData.password.length < 5 || formData.password.length > 10) {
+      formErrors.password = "Password must be between 5 and 10 characters";
+    }
+    setErrors(formErrors);
+    return Object.keys(formErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await login(formData);
-      setAuth(response.data);
-      navigate('/posts');
-    } catch (error) {
-      console.error(error);
+    if (validate()) {
+      try {
+        const response = await login(formData);
+        setAuth(response.data);
+        navigate('/posts');
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -42,6 +57,7 @@ const Login = () => {
                       onChange={handleChange}
                     />
                     <label className="form-label" htmlFor="typeUsername">Username</label>
+                    {errors.username && <span className="text-danger">{errors.username}</span>}
                   </div>
                   <div className="form-outline form-white mb-4">
                     <input
@@ -53,6 +69,7 @@ const Login = () => {
                       onChange={handleChange}
                     />
                     <label className="form-label" htmlFor="typePasswordX">Password</label>
+                    {errors.password && <span className="text-danger">{errors.password}</span>}
                   </div>
                   <button className="btn btn-outline-light btn-lg px-5" type="submit">Login</button>
                 </form>

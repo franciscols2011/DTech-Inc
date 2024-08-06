@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getPosts, logout } from '../api';
 import Post from './Post';
 import { useAuth } from '../auth/AuthContext';
+import Navbar from './Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/styles.css';
 
@@ -10,7 +11,7 @@ const Posts = () => {
   const [posts, setPosts] = useState([]);
   const { setAuth } = useAuth();
   const navigate = useNavigate();
-  const [order, setOrder] = useState('desc');
+  const [order, setOrder] = useState('newest');
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -24,6 +25,10 @@ const Posts = () => {
     fetchPosts();
   }, [order]);
 
+  const handleOrderChange = () => {
+    setOrder(order === 'newest' ? 'oldest' : 'newest');
+  };
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -34,31 +39,25 @@ const Posts = () => {
     }
   };
 
-  const toggleOrder = () => {
-    setOrder(order === 'desc' ? 'asc' : 'desc');
-  };
-
   return (
-    <section className="vh-100 gradient-custom">
-      <div className="container py-5 h-100">
-        <div className="d-flex justify-content-end mb-4">
-          <button onClick={handleLogout} className="btn btn-outline-light btn-lg px-5">Logout</button>
+    <>
+      <Navbar />
+      <section className="vh-100 gradient-custom">
+        <div className="container py-5 h-100">
+          <div className="d-flex justify-content-end mb-4">
+            <button onClick={handleOrderChange} className="btn btn-outline-light btn-lg px-5">
+              {order === 'newest' ? 'Mostrar más antiguos' : 'Mostrar más recientes'}
+            </button>
+
+          </div>
+          <div className="post-list">
+            {posts.map((post) => (
+              <Post key={post.id} post={post} />
+            ))}
+          </div>
         </div>
-        <div className="d-flex justify-content-center mb-4">
-          <button onClick={toggleOrder} className="btn btn-outline-light btn-lg px-5">
-            {order === 'desc' ? 'Mostrar más antiguos' : 'Mostrar más recientes'}
-          </button>
-        </div>
-        <div className="post-list">
-          {posts.map((post) => (
-            <Post key={post.id} post={post} />
-          ))}
-        </div>
-        <div className="create-post">
-          <a href="/create" className="btn btn-outline-light btn-lg px-5">Create Post</a>
-        </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 };
 

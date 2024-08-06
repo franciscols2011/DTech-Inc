@@ -1,45 +1,57 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { register } from '../api';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import '../styles/styles.css';
 
 const Register = () => {
-  const [formData, setFormData] = useState({
-    avatar: '',
-    name: '',
-    surname: '',
-    username: '',
-    password: ''
-  });
+  const [formData, setFormData] = useState({ avatar: '', name: '', surname: '', username: '', password: '' });
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const validate = () => {
+    let formErrors = {};
+    if (!formData.username || formData.username.length < 3 || formData.username.length > 20) {
+      formErrors.username = "Username must be between 3 and 20 characters";
+    }
+    if (!formData.password || formData.password.length < 5 || formData.password.length > 10) {
+      formErrors.password = "Password must be between 5 and 10 characters";
+    }
+    if (!formData.name || formData.name.length < 3 || formData.name.length > 20) {
+      formErrors.name = "Name must be between 3 and 20 characters";
+    }
+    if (!formData.surname || formData.surname.length < 3 || formData.surname.length > 20) {
+      formErrors.surname = "Surname must be between 3 and 20 characters";
+    }
+    setErrors(formErrors);
+    return Object.keys(formErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await register(formData);
-      navigate('/login');  // Redirect to login after successful registration
-    } catch (error) {
-      console.error(error);
+    if (validate()) {
+      try {
+        await register(formData);
+        navigate('/login');
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
   return (
-    <section className="text-center text-lg-start gradient-custom vh-100">
+    <section className="vh-100 gradient-custom">
       <div className="container py-5 h-100">
-        <div className="row g-0 d-flex align-items-center h-100">
-          <div className="col-lg-4 d-none d-lg-flex">
-            <img src="https://mdbootstrap.com/img/new/ecommerce/vertical/004.jpg" alt="Sample" className="w-100 rounded-t-5 rounded-tr-lg-0 rounded-bl-lg-5" />
-          </div>
-          <div className="col-lg-8">
+        <div className="row d-flex justify-content-center align-items-center h-100">
+          <div className="col-12 col-md-8 col-lg-6 col-xl-5">
             <div className="card bg-dark text-white" style={{ borderRadius: '1rem' }}>
-              <div className="card-body py-5 px-md-5">
+              <div className="card-body p-5 text-center">
+                <h3 className="mb-5">Register</h3>
                 <form onSubmit={handleSubmit}>
                   <div className="form-outline form-white mb-4">
+                  <label className="form-label" htmlFor="typeAvatar">Avatar URL</label>
                     <input
                       type="text"
                       id="typeAvatar"
@@ -47,9 +59,9 @@ const Register = () => {
                       className="form-control form-control-lg"
                       onChange={handleChange}
                     />
-                    <label className="form-label" htmlFor="typeAvatar">Avatar URL</label>
                   </div>
                   <div className="form-outline form-white mb-4">
+                  <label className="form-label" htmlFor="typeName">Name</label>
                     <input
                       type="text"
                       id="typeName"
@@ -58,9 +70,10 @@ const Register = () => {
                       required
                       onChange={handleChange}
                     />
-                    <label className="form-label" htmlFor="typeName">Name</label>
+                    {errors.name && <span className="text-danger">{errors.name}</span>}
                   </div>
                   <div className="form-outline form-white mb-4">
+                  <label className="form-label" htmlFor="typeSurname">Surname</label>
                     <input
                       type="text"
                       id="typeSurname"
@@ -69,9 +82,10 @@ const Register = () => {
                       required
                       onChange={handleChange}
                     />
-                    <label className="form-label" htmlFor="typeSurname">Surname</label>
+                    {errors.surname && <span className="text-danger">{errors.surname}</span>}
                   </div>
                   <div className="form-outline form-white mb-4">
+                  <label className="form-label" htmlFor="typeUsername">Username</label>
                     <input
                       type="text"
                       id="typeUsername"
@@ -80,9 +94,10 @@ const Register = () => {
                       required
                       onChange={handleChange}
                     />
-                    <label className="form-label" htmlFor="typeUsername">Username</label>
+                    {errors.username && <span className="text-danger">{errors.username}</span>}
                   </div>
                   <div className="form-outline form-white mb-4">
+                  <label className="form-label" htmlFor="typePassword">Password</label>
                     <input
                       type="password"
                       id="typePassword"
@@ -91,10 +106,11 @@ const Register = () => {
                       required
                       onChange={handleChange}
                     />
-                    <label className="form-label" htmlFor="typePassword">Password</label>
+                    {errors.password && <span className="text-danger">{errors.password}</span>}
                   </div>
-                  <button type="submit" className="btn btn-outline-light btn-lg px-5">Sign up</button>
+                  <button className="btn btn-outline-light btn-lg px-5" type="submit">Sign up</button>
                 </form>
+                <p className="mt-3">Already have an account? <Link to="/login">Login</Link></p>
               </div>
             </div>
           </div>
