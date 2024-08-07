@@ -2,7 +2,6 @@ from flask import Blueprint, request, jsonify
 from models import db, User, Post
 from flask_login import login_user, logout_user, current_user, login_required
 import logging
-
 api = Blueprint('api', __name__)
 
 @api.route('/register', methods=['POST'])
@@ -75,7 +74,8 @@ def create_post():
     except Exception as e:
         logging.error(f"Error during creating post: {e}")
         return jsonify({"error": str(e)}), 500
-
+    
+    
 @api.route('/posts', methods=['GET'])
 @login_required
 def get_posts():

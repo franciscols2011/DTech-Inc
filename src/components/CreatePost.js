@@ -22,10 +22,8 @@ const CreatePost = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form data to be submitted:", formData);  // Debugging
     try {
-      const response = await createPost(formData);
-      console.log("Response from createPost API:", response);  // Debugging
+      await createPost(formData);
       handleClose();
       navigate('/posts');
     } catch (error) {
