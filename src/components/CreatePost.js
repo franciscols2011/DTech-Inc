@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Button, Modal, Form } from 'react-bootstrap';
 import { createPost } from '../api';
+import { useNavigate } from 'react-router-dom';
 
 const CreatePost = () => {
   const [formData, setFormData] = useState({
@@ -9,7 +10,11 @@ const CreatePost = () => {
     location: '',
     status: 'published'
   });
+  const [show, setShow] = useState(false);
   const navigate = useNavigate();
+
+  const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -17,82 +22,84 @@ const CreatePost = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Form data to be submitted:", formData);  // Debugging
     try {
-      await createPost(formData);
+      const response = await createPost(formData);
+      console.log("Response from createPost API:", response);  // Debugging
+      handleClose();
       navigate('/posts');
     } catch (error) {
-      console.error(error);
+      console.error("Error creating post:", error);
     }
   };
 
   return (
-    <section className="vh-100 gradient-custom">
-      <div className="container py-5 h-100">
-        <div className="row g-0 d-flex align-items-center h-100">
-          <div className="col-lg-4 d-none d-lg-flex">
-            <img src="https://mdbootstrap.com/img/new/ecommerce/vertical/004.jpg" alt="Sample" className="w-100 rounded-t-5 rounded-tr-lg-0 rounded-bl-lg-5" />
-          </div>
-          <div className="col-lg-8">
-            <div className="card bg-dark text-white" style={{ borderRadius: '1rem' }}>
-              <div className="card-body py-5 px-md-5 text-center">
-                <h2 className="fw-bold mb-2 text-uppercase">Create Post</h2>
-                <p className="text-white-50 mb-5">Please enter the details of your post!</p>
-                <form onSubmit={handleSubmit}>
-                  <div className="form-outline form-white mb-4">
-                  <label className="form-label" htmlFor="typeImage">Image URL</label>
-                    <input
-                      type="text"
-                      id="typeImage"
-                      name="image"
-                      className="form-control form-control-lg"
-                      required
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="form-outline form-white mb-4">
-                  <label className="form-label" htmlFor="typeMessage">Message</label>
-                    <textarea
-                      id="typeMessage"
-                      name="message"
-                      className="form-control form-control-lg"
-                      required
-                      onChange={handleChange}
-                    ></textarea>
-                  </div>
-                  <div className="form-outline form-white mb-4">
-                  <label className="form-label" htmlFor="typeLocation">Location</label>
-                    <input
-                      type="text"
-                      id="typeLocation"
-                      name="location"
-                      className="form-control form-control-lg"
-                      required
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div className="form-outline form-white mb-4">
-                  <label className="form-label" htmlFor="typeStatus">Status</label>
-                    <select
-                      id="typeStatus"
-                      name="status"
-                      className="form-control form-control-lg"
-                      required
-                      onChange={handleChange}
-                    >
-                      <option value="published">Published</option>
-                      <option value="drafted">Drafted</option>
-                      <option value="deleted">Deleted</option>
-                    </select>
-                  </div>
-                  <button className="btn btn-outline-light btn-lg px-5" type="submit">Create</button>
-                </form>
-                <p className="mb-0 mt-4">Want to see all posts? <a href="/posts" className="text-white-50 fw-bold">View Posts</a></p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <>
+      <Button variant="primary" onClick={handleShow}>
+        Create Post
+      </Button>
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Create Post</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-3" controlId="formImage">
+              <Form.Label>Image URL</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter image URL"
+                name="image"
+                value={formData.image}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formMessage">
+              <Form.Label>Message</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                placeholder="Enter your message"
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formLocation">
+              <Form.Label>Location</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter location"
+                name="location"
+                value={formData.location}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="formStatus">
+              <Form.Label>Status</Form.Label>
+              <Form.Control
+                as="select"
+                name="status"
+                value={formData.status}
+                onChange={handleChange}
+                required
+              >
+                <option value="published">Published</option>
+                <option value="drafted">Drafted</option>
+                <option value="deleted">Deleted</option>
+              </Form.Control>
+            </Form.Group>
+            <Button variant="primary" type="submit">
+              Submit
+            </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
+    </>
   );
 };
 

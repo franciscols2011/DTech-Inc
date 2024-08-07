@@ -1,7 +1,7 @@
 const { override, addWebpackDevServerConfig } = require('customize-cra');
 
 const devServerConfig = () => (config) => {
-  config.allowedHosts = 'all'; // Permitir todos los hosts
+  config.allowedHosts = 'all'; 
   return config;
 };
 
