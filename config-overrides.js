@@ -1,9 +1,11 @@
-const path = require('path');
+const { override, addWebpackDevServerConfig } = require('customize-cra');
 
-module.exports = function override(config, env) {
-  config.devServer = {
-    ...config.devServer,
-    allowedHosts: ['localhost', '127.0.0.1'],
-  };
+const devServerConfig = () => (config) => {
+  config.allowedHosts = 'all'; // Permitir todos los hosts
   return config;
+};
+
+module.exports = {
+  webpack: override(),
+  devServer: override(devServerConfig())
 };

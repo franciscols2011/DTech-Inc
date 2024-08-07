@@ -66,7 +66,7 @@ const Posts = () => {
         <div className="container py-5 h-100">
           <div className="d-flex justify-content-end mb-4">
             <button onClick={handleOrderChange} className="btn btn-outline-light btn-lg px-5">
-              {order === 'newest' ? 'Show older' : 'Show most recent'}
+              {order === 'newest' ? 'Show older' : 'Show more recent'}
             </button>
           </div>
           <div className="post-list">
