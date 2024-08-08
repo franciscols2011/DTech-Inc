@@ -5,6 +5,9 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Posts from './components/Posts';
 import CreatePost from './components/CreatePost';
+import './styles/styles.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 
 function App() {

@@ -28,15 +28,14 @@ body, html {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 100px; /* Space for create post button */
+  margin-bottom: 100px;
 }
 
 .post {
-  background-color: #ffffff;
+  background-color: fffff;
   border: 1px solid #dbdbdb;
   border-radius: 8px;
-  width: 500px; /* Fixed width for each post */
-  height: 600px; /* Fixed height for each post */
+  width: 500px;
   margin-bottom: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -64,38 +63,41 @@ body, html {
 
 .post-image {
   width: 100%;
-  height: 300px; /* Adjust height for uniform image size */
-  object-fit: cover; 
+  height: 300px;
+  object-fit: cover;
 }
 
 .post-footer {
   flex-direction: column;
   align-items: flex-start;
+  padding: 10px 0;
 }
 
-.post-footer-left {
+.post-footer .post-actions {
   display: flex;
-  align-items: center;
-  margin-bottom: 10px;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 10px;
 }
 
-.post-footer-left button {
-  background: none;
-  border: none;
-  color: #262626;
-  cursor: pointer;
-  margin-right: 5px;
+.post-footer .post-likes,
+.post-footer .post-caption,
+.post-footer .post-time {
+  width: 100%;
+  padding: 0 10px;
+  margin-bottom: 0;
 }
 
-.post-footer-left button.liked {
-  color: red; /* Red color when liked */
+.post-footer .post-caption p {
+  margin: 5px 0;
 }
 
-.post-footer-right p {
-  margin: 0;
-  padding: 0;
-}
-
-.post-footer-right small {
+.post-footer .post-time small {
   color: #8e8e8e;
+  margin-bottom: 0;
+}
+
+.btn-link {
+  text-decoration: none;
+  color: inherit;
 }

@@ -9,7 +9,7 @@ import logging
 app = Flask(__name__, static_folder='../build', static_url_path='/')
 app.config.from_object(Config)
 
-CORS(app, supports_credentials=True)  # Asegura que supports_credentials sea True
+CORS(app, supports_credentials=True)
 
 db.init_app(app)
 login_manager = LoginManager()

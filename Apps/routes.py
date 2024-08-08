@@ -13,13 +13,17 @@ def register():
         if not data:
             raise ValueError("No JSON data received")
 
+        password = data.get('password')
+        if not password or len(password) < 5 or len(password) > 10:
+            raise ValueError("Password must be between 5 and 10 characters")
+
         user = User(
             avatar=data.get('avatar'),
             username=data.get('username'),
             name=data.get('name'),
             surname=data.get('surname')
         )
-        user.set_password(data.get('password'))
+        user.set_password(password)
         db.session.add(user)
         db.session.commit()
         logging.debug(f"User {user.username} registered successfully.")
@@ -31,6 +35,7 @@ def register():
     except Exception as e:
         logging.error(f"Error during registration: {e}")
         return jsonify({"error": str(e)}), 500
+
 
 @api.route('/login', methods=['POST'])
 def login():

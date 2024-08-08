@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { likePost } from '../api';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart, faComment, faPaperPlane, faBookmark } from '@fortawesome/free-regular-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/styles.css';
 
@@ -43,12 +45,23 @@ const Post = React.forwardRef(({ post }, ref) => {
       </div>
       <img src={post.image} alt={post.message} className="post-image card-img-top" />
       <div className="post-footer card-body">
-        <div className="post-footer-left d-flex align-items-center mb-2">
-          <button onClick={handleLike} className="btn btn-link p-0 me-2">❤</button>
+        <div className="post-actions d-flex justify-content-between mb-2">
+          <div>
+            <button onClick={handleLike} className="btn btn-link p-0 me-2">
+              <FontAwesomeIcon icon={faHeart} className={post.liked ? 'text-danger' : ''} />
+            </button>
+            <FontAwesomeIcon icon={faComment} className="me-3" />
+            <FontAwesomeIcon icon={faPaperPlane} />
+          </div>
+          <FontAwesomeIcon icon={faBookmark} />
+        </div>
+        <div className="post-likes">
           <span>{post.likes.length} likes</span>
         </div>
-        <div className="post-footer-right">
+        <div className="post-caption">
           <p><strong>{post.author.username}</strong> {post.message}</p>
+        </div>
+        <div className="post-time">
           <small>{timeSinceCreation(post.created_at)}</small>
         </div>
       </div>

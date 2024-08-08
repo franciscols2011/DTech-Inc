@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { login } from '../api';
 import { useAuth } from '../auth/AuthContext';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../styles/styles.css';
 
 const Login = () => {
   const [formData, setFormData] = useState({ username: '', password: '' });
