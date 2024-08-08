@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getPosts, createPost, logout } from '../api';
+import { getPosts, logout } from '../api';
 import Post from './Post';
 import { useAuth } from '../auth/AuthContext';
 import Navbar from './Navbar';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import '../styles/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -28,8 +30,8 @@ const Posts = () => {
     fetchPosts();
   }, [fetchPosts]);
 
-  const handleOrderChange = () => {
-    setOrder(order === 'newest' ? 'oldest' : 'newest');
+  const handleOrderChange = (newOrder) => {
+    setOrder(newOrder);
   };
 
   const handleSearch = (term) => {
@@ -63,11 +65,31 @@ const Posts = () => {
     <>
       <Navbar handleLogout={handleLogout} handleSearch={handleSearch} />
       <section className="vh-100 gradient-custom">
-        <div className="container ">
+        <div className="container">
           <div className="d-flex justify-content-between mb-4">
-            <button onClick={handleOrderChange} className="btn btn-outline-light btn-lg px-5">
-              {order === 'newest' ? 'Show Oldest' : 'Show Newest'}
-            </button>
+            <div className="dropdown ms-auto">
+              <button
+                className="btn dropdown-toggle"
+                type="button"
+                id="dropdownMenuButton"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <FontAwesomeIcon icon={faFilter} />
+              </button>
+              <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li>
+                  <button className="dropdown-item" onClick={() => handleOrderChange('newest')}>
+                    Filter by Newest
+                  </button>
+                </li>
+                <li>
+                  <button className="dropdown-item" onClick={() => handleOrderChange('oldest')}>
+                    Filter by Oldest
+                  </button>
+                </li>
+              </ul>
+            </div>
           </div>
           <div className="post-list">
             {posts.map((post, index) => (

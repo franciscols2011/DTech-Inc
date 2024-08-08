@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from models import db, User, Post
 from flask_login import login_user, logout_user, current_user, login_required
 import logging
+
 api = Blueprint('api', __name__)
 
 @api.route('/register', methods=['POST'])
@@ -116,8 +117,6 @@ def get_posts():
         return jsonify({"error": str(e)}), 500
 
 
-
-
 @api.route('/like', methods=['POST'])
 @login_required
 def like_post():
@@ -177,6 +176,3 @@ def search_posts():
     except Exception as e:
         logging.error(f"Error during fetching posts: {e}")
         return jsonify({"error": str(e)}), 500
-
-
-

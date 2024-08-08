@@ -3,6 +3,7 @@ from config import Config
 from models import db, User
 from flask_login import LoginManager
 from flask_cors import CORS
+from flask_migrate import Migrate
 import os
 import logging
 
@@ -12,6 +13,8 @@ app.config.from_object(Config)
 CORS(app, supports_credentials=True)
 
 db.init_app(app)
+migrate = Migrate(app, db)  # Inicializa Flask-Migrate
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'

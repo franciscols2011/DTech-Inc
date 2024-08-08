@@ -1,16 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { likePost } from '../api';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart as faSolidHeart } from '@fortawesome/free-solid-svg-icons';
 import { faHeart, faComment, faPaperPlane, faBookmark } from '@fortawesome/free-regular-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/styles.css';
 
 const Post = React.forwardRef(({ post }, ref) => {
+  const [liked, setLiked] = useState(post.liked);
+  const [likes, setLikes] = useState(post.likes);
+
   const handleLike = async () => {
     try {
-      await likePost(post.id);
-      window.location.reload();
+      const response = await likePost(post.id);
+      setLiked(!liked);
+      if (liked) {
+        setLikes(likes.filter((username) => username !== response.data.last_liked_by));
+      } else {
+        setLikes([response.data.last_liked_by, ...likes]);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -45,18 +54,20 @@ const Post = React.forwardRef(({ post }, ref) => {
       </div>
       <img src={post.image} alt={post.message} className="post-image card-img-top" />
       <div className="post-footer card-body">
-        <div className="post-actions d-flex justify-content-between mb-2">
-          <div>
-            <button onClick={handleLike} className="btn btn-link p-0 me-2">
-              <FontAwesomeIcon icon={faHeart} className={post.liked ? 'text-danger' : ''} />
+        <div className="post-actions d-flex justify-content-between mb-2 align-items-center">
+          <div className="d-flex">
+            <button onClick={handleLike} className="btn btn-link p-0 me-3">
+              <FontAwesomeIcon icon={liked ? faSolidHeart : faHeart} className={`icon ${liked ? 'text-danger' : ''}`} />
             </button>
-            <FontAwesomeIcon icon={faComment} className="me-3" />
-            <FontAwesomeIcon icon={faPaperPlane} />
+            <FontAwesomeIcon icon={faComment} className="icon me-3" />
+            <FontAwesomeIcon icon={faPaperPlane} className="icon" />
           </div>
-          <FontAwesomeIcon icon={faBookmark} />
+          <FontAwesomeIcon icon={faBookmark} className="icon" />
         </div>
         <div className="post-likes">
-          <span>{post.likes.length} likes</span>
+          <span>
+            {likes[0]} and {likes.length - 1} others liked this
+          </span>
         </div>
         <div className="post-caption">
           <p><strong>{post.author.username}</strong> {post.message}</p>

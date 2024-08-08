@@ -27,9 +27,8 @@ class User(db.Model, UserMixin):
         return username
 
     @validates('password_hash')
-    def validate_password(self, key, password):
-        assert len(password) >= 5 and len(password) <= 10, "Password must be between 5 and 10 characters."
-        return generate_password_hash(password)
+    def validate_password(self, key, password_hash):
+        return password_hash
 
     @validates('name', 'surname')
     def validate_name_surname(self, key, value):
@@ -37,6 +36,7 @@ class User(db.Model, UserMixin):
         return value
 
     def set_password(self, password):
+        assert len(password) >= 5 and len(password) <= 10, "Password must be between 5 and 10 characters."
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
