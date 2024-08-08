@@ -110,7 +110,7 @@ def get_posts():
             "created_at": post.created_at,
             "location": post.location,
             "status": post.status,
-            "likes": [user.username for user in post.liked_by]
+            "likes": [user.username for user in post.liked_by_users]  # Aquí se usa liked_by_users
         } for post in posts]), 200
     except Exception as e:
         logging.error(f"Error during fetching posts: {e}")
@@ -128,17 +128,25 @@ def like_post():
         post = Post.query.get(post_id)
         if not post:
             return jsonify({"error": "Post not found"}), 404
-        if current_user in post.liked_by:
-            post.liked_by.remove(current_user)
+
+        if current_user in post.liked_by_users:
+            post.unlike(current_user)
             message = "Post unliked successfully"
         else:
-            post.liked_by.append(current_user)
+            post.like(current_user)
             message = "Post liked successfully"
+
         db.session.commit()
-        return jsonify({"message": message}), 200
+
+        return jsonify({
+            "message": message,
+            "likes": [user.username for user in post.liked_by_users],
+            "last_liked_by": current_user.username
+        }), 200
     except Exception as e:
         logging.error(f"Error during liking post: {e}")
         return jsonify({"error": str(e)}), 500
+
 
 @api.route('/test', methods=['GET'])
 def test():
@@ -171,7 +179,7 @@ def search_posts():
             "created_at": post.created_at,
             "location": post.location,
             "status": post.status,
-            "likes": [user.username for user in post.liked_by]
+            "likes": [user.username for user in post.liked_by_users]
         } for post in posts]), 200
     except Exception as e:
         logging.error(f"Error during fetching posts: {e}")

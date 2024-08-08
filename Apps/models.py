@@ -18,8 +18,9 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(128), nullable=False)
     name = db.Column(db.String(20), nullable=False)
     surname = db.Column(db.String(20), nullable=False)
-    posts = db.relationship('Post', backref='author', lazy=True)
-    liked_posts = db.relationship('Post', secondary=post_likes, backref=db.backref('liked_by', lazy='dynamic'))
+    # No se usa backref aquí, se usa una relación explícita
+    posts = db.relationship('Post', lazy=True, foreign_keys='Post.author_id', cascade="all, delete-orphan")
+    liked_posts = db.relationship('Post', secondary=post_likes, lazy='dynamic')
 
     @validates('username')
     def validate_username(self, key, username):
@@ -42,6 +43,7 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     image = db.Column(db.String(255), nullable=False)
@@ -50,6 +52,11 @@ class Post(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     location = db.Column(db.String(30), nullable=False)
     status = db.Column(db.String(10), nullable=False)
+    last_liked_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    last_liked_user = db.relationship('User', foreign_keys=[last_liked_user_id], post_update=True)
+    author = db.relationship('User', foreign_keys=[author_id])
+    liked_by_users = db.relationship('User', secondary=post_likes, lazy='dynamic')  # Verifica esta línea
 
     @validates('message')
     def validate_message(self, key, message):
@@ -65,3 +72,19 @@ class Post(db.Model):
     def validate_status(self, key, status):
         assert status in ['drafted', 'deleted', 'published'], "Status must be one of 'drafted', 'deleted', or 'published'."
         return status
+
+    def like(self, user):
+        if not self.is_liked_by(user):
+            self.liked_by_users.append(user)
+            self.last_liked_user_id = user.id
+
+    def unlike(self, user):
+        if self.is_liked_by(user):
+            self.liked_by_users.remove(user)
+            if self.liked_by_users.count() > 0:
+                self.last_liked_user_id = self.liked_by_users[-1].id
+            else:
+                self.last_liked_user_id = None
+
+    def is_liked_by(self, user):
+        return self.liked_by_users.filter(post_likes.c.user_id == user.id).count() > 0

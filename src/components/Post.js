@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { likePost } from '../api';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,19 +6,32 @@ import { faHeart as faSolidHeart } from '@fortawesome/free-solid-svg-icons';
 import { faHeart, faComment, faPaperPlane, faBookmark } from '@fortawesome/free-regular-svg-icons';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/styles.css';
+import { useAuth } from '../auth/AuthContext';
 
 const Post = React.forwardRef(({ post }, ref) => {
-  const [liked, setLiked] = useState(post.liked);
-  const [likes, setLikes] = useState(post.likes);
+  const { auth } = useAuth();
+  const currentUser = auth?.user?.username;
+
+  // Estados para el manejo de likes y si se debe mostrar la lista de likes
+  const [liked, setLiked] = useState(false);
+  const [likes, setLikes] = useState(post.likes || []);
+  const [showLikes, setShowLikes] = useState(false);
+
+  useEffect(() => {
+    // Inicializa el estado "liked" si el usuario ha dado like al post
+    if (post.likes && post.likes.includes(currentUser)) {
+      setLiked(true);
+    }
+  }, [post.likes, currentUser]);
 
   const handleLike = async () => {
     try {
-      const response = await likePost(post.id);
+      await likePost(post.id);
       setLiked(!liked);
       if (liked) {
-        setLikes(likes.filter((username) => username !== response.data.last_liked_by));
+        setLikes(likes.filter((username) => username !== currentUser));
       } else {
-        setLikes([response.data.last_liked_by, ...likes]);
+        setLikes([currentUser, ...likes]);
       }
     } catch (error) {
       console.error(error);
@@ -37,6 +50,10 @@ const Post = React.forwardRef(({ post }, ref) => {
       return `${interval} minutes ago`;
     }
     return `${Math.floor(seconds)} seconds ago`;
+  };
+
+  const handleShowLikes = () => {
+    setShowLikes(!showLikes);
   };
 
   return (
@@ -65,9 +82,21 @@ const Post = React.forwardRef(({ post }, ref) => {
           <FontAwesomeIcon icon={faBookmark} className="icon" />
         </div>
         <div className="post-likes">
-          <span>
-            {likes[0]} and {likes.length - 1} others liked this
-          </span>
+          {likes.length === 1 && likes[0] === currentUser && (
+            <span>{currentUser} le dio like</span>
+          )}
+          {likes.length > 1 && (
+            <span onClick={handleShowLikes} style={{ cursor: 'pointer' }}>
+              {`a ${likes.length} ${likes.length > 1 ? 'personas les gustó la publicación' : 'persona le gustó la publicación'}`}
+            </span>
+          )}
+          {showLikes && (
+            <div className="likes-list">
+              {likes.map((username) => (
+                <div key={username}>{username}</div>
+              ))}
+            </div>
+          )}
         </div>
         <div className="post-caption">
           <p><strong>{post.author.username}</strong> {post.message}</p>

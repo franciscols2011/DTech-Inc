@@ -1,8 +1,8 @@
-"""Remove likes functionality
+"""Separar relaciones de User y Post
 
-Revision ID: 905c4343a9b8
+Revision ID: c561c868b74b
 Revises: 
-Create Date: 2024-08-08 19:05:35.703001
+Create Date: 2024-08-08 19:49:31.993549
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '905c4343a9b8'
+revision = 'c561c868b74b'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -36,7 +36,9 @@ def upgrade():
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('location', sa.String(length=30), nullable=False),
     sa.Column('status', sa.String(length=10), nullable=False),
+    sa.Column('last_liked_user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['author_id'], ['user.id'], ),
+    sa.ForeignKeyConstraint(['last_liked_user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('post_likes',
