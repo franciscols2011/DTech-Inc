@@ -1,8 +1,8 @@
-"""Initial migration
+"""Remove likes functionality
 
-Revision ID: 3496d5c894f9
+Revision ID: 905c4343a9b8
 Revises: 
-Create Date: 2024-08-08 04:48:42.355924
+Create Date: 2024-08-08 19:05:35.703001
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '3496d5c894f9'
+revision = '905c4343a9b8'
 down_revision = None
 branch_labels = None
 depends_on = None
