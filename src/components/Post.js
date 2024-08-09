@@ -37,9 +37,9 @@ const Post = React.forwardRef(({ post }, ref) => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setTime(timeSinceCreation(post.created_at));
-    }, 60000); // Actualiza cada minuto
+    }, 60000); 
 
-    return () => clearInterval(intervalId); // Limpia el intervalo cuando se desmonta el componente
+    return () => clearInterval(intervalId); 
   }, [post.created_at]);
 
   const handleLike = async () => {
