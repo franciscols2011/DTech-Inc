@@ -17,15 +17,17 @@ const Posts = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const observer = useRef();
 
+  // Función para obtener los posts desde la API
   const fetchPosts = useCallback(async () => {
     try {
       const { data } = await getPosts({ order, searchTerm });
       setPosts(data);
     } catch (error) {
-      console.error(error);
+      console.error('Error fetching posts:', error);
     }
   }, [order, searchTerm]);
 
+  // Llamar a fetchPosts cada vez que la orden o el término de búsqueda cambien
   useEffect(() => {
     fetchPosts();
   }, [fetchPosts]);
@@ -44,10 +46,11 @@ const Posts = () => {
       setAuth(null);
       navigate('/login');
     } catch (error) {
-      console.error(error);
+      console.error('Error during logout:', error);
     }
   };
 
+  // Configurar el observador para cargar más posts cuando el último post sea visible
   const lastPostElementRef = useCallback(
     (node) => {
       if (observer.current) observer.current.disconnect();
@@ -93,7 +96,13 @@ const Posts = () => {
           </div>
           <div className="post-list">
             {posts.map((post, index) => (
-              <Post key={post.id} post={post} ref={index === posts.length - 1 ? lastPostElementRef : null} />
+              <Post
+                key={post.id}
+                post={post}
+                ref={index === posts.length - 1 ? lastPostElementRef : null}
+                liked={post.liked} // Pasando el estado "liked" directamente desde el backend
+                likesCount={post.likes_count} // Pasando el número de "likes"
+              />
             ))}
           </div>
         </div>

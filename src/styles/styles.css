@@ -2,9 +2,11 @@ body, html {
   height: 100%;
   margin: 0;
   padding: 0;
-  font-family: 'Arial', sans-serif;
-  background: linear-gradient(to right, #6a11cb, #2575fc);
+  font-family: Arial, sans-serif;
   overflow-x: hidden;
+  background: #6a11cb;
+  background: -webkit-linear-gradient(to right, #6a11cb, #2575fc);
+  background: linear-gradient(to right, #6a11cb, #2575fc);
 }
 
 .vh-100 {
@@ -12,6 +14,8 @@ body, html {
 }
 
 .gradient-custom {
+  background: #6a11cb;
+  background: -webkit-linear-gradient(to right, #6a11cb, #2575fc);
   background: linear-gradient(to right, #6a11cb, #2575fc);
 }
 
@@ -39,19 +43,14 @@ body, html {
   background-color: #ffffff;
   border: 1px solid #dbdbdb;
   border-radius: 8px;
-  width: 90%;
-  max-width: 600px;
+  width: 52%; /* Ajusta el ancho de los posts */
+  max-width: 700px; /* Máximo ancho de los posts */
   margin-bottom: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease;
-}
-
-.post:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .post-header, .post-footer {
-  padding: 10px 15px;
+  padding: 10px;
   display: flex;
   align-items: center;
 }
@@ -73,63 +72,44 @@ body, html {
 
 .post-image {
   width: 100%;
-  height: auto;
+  height: 300px;
   object-fit: cover;
-  border-bottom: 1px solid #dbdbdb;
 }
 
 .post-footer {
   flex-direction: column;
   align-items: flex-start;
-  padding: 10px 15px;
+  padding: 10px 0;
 }
 
-.post-actions {
+.post-footer .post-actions {
   display: flex;
   justify-content: space-between;
   width: 100%;
-  margin-bottom: 10px;
+  padding: 0 10px;
 }
 
-.post-actions .btn-link {
+.post-footer .post-actions .btn-link {
   padding: 0;
   margin-right: 1rem;
   font-size: 1.25rem;
 }
 
-.post-actions .icon {
-  font-size: 1.25rem;
-  margin-right: 10px;
-  color: #333;
-  transition: color 0.3s ease;
+.post-footer .post-likes,
+.post-footer .post-caption,
+.post-footer .post-time {
+  width: 100%;
+  padding: 0 10px;
+  margin-bottom: 0;
 }
 
-.post-actions .icon:hover {
-  color: #007bff;
-}
-
-.post-actions .btn-link .icon {
-  font-size: 1.25rem;
-}
-
-.post-likes {
-  display: flex;
-  align-items: center;
-  margin-top: 5px;
-  font-size: 0.875rem;
-  color: #555;
-}
-
-.post-likes img {
-  margin-right: 5px;
-}
-
-.post-caption p {
+.post-footer .post-caption p {
   margin: 5px 0;
 }
 
-.post-time small {
+.post-footer .post-time small {
   color: #8e8e8e;
+  margin-bottom: 0;
 }
 
 .btn-link {
@@ -137,13 +117,59 @@ body, html {
   color: inherit;
 }
 
-.post-actions .btn-link .fa-heart.text-danger {
-  color: red;
+.post-actions .btn-link {
+  font-size: 1.25rem;
+  color: #000; /* Color por defecto de los iconos */
 }
 
-@media (max-width: 768px) {
-  .post {
-    width: 100%;
-    margin: 10px 0;
-  }
+.post-actions .btn-link .fa-heart {
+  color: #000; /* Color por defecto del corazón */
+}
+
+.post-actions .btn-link .fa-heart.text-danger {
+  color: red; /* Color rojo cuando está "likeado" */
+}
+
+.post-actions .icon {
+  font-size: 1.25rem; /* Ajusta el tamaño de los iconos */
+  margin-right: 10px;
+}
+
+.post-actions .icon:last-child {
+  margin-right: 0;
+}
+
+.post-actions .btn-link .icon {
+  font-size: 1.25rem;
+}
+
+.post-actions .btn-link .fa-heart,
+.post-actions .btn-link .fa-comment,
+.post-actions .btn-link .fa-paper-plane,
+.post-actions .btn-link .fa-bookmark {
+  font-size: 1.25rem; /* Asegura que todos los iconos tengan el mismo tamaño */
+}
+
+.post-actions .d-flex .icon {
+  margin-right: 10px; /* Asegura que los iconos dentro del d-flex tengan el mismo espaciado */
+}
+
+.post-actions .d-flex .btn-link {
+  display: flex;
+  align-items: center;
+}
+
+.post-likes {
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+}
+
+.post-likes img {
+  margin-right: 5px;
+}
+
+.post-likes span {
+  font-size: 0.875rem;
+  color: #555;
 }

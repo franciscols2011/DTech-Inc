@@ -1,8 +1,8 @@
-"""Separar relaciones de User y Post
+"""Add indexes to post_likes
 
-Revision ID: c561c868b74b
+Revision ID: 251213d1faed
 Revises: 
-Create Date: 2024-08-08 19:49:31.993549
+Create Date: 2024-08-08 20:33:57.245736
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'c561c868b74b'
+revision = '251213d1faed'
 down_revision = None
 branch_labels = None
 depends_on = None

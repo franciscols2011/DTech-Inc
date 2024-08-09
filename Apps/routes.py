@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from models import db, User, Post
 from flask_login import login_user, logout_user, current_user, login_required
+from sqlalchemy.orm import selectinload
 import logging
 
 api = Blueprint('api', __name__)
@@ -90,6 +91,7 @@ def get_posts():
         search_term = request.args.get('searchTerm', '')
         logging.debug(f"Order received: {order}, Search term received: {search_term}")
 
+        # Filtra las publicaciones basadas en el término de búsqueda y ordena
         query = Post.query.filter(Post.location.ilike(f'%{search_term}%'))
 
         if order == 'oldest':
@@ -97,21 +99,31 @@ def get_posts():
         else:
             posts = query.order_by(Post.created_at.desc()).all()
 
-        return jsonify([{
-            "id": post.id,
-            "image": post.image,
-            "message": post.message,
-            "author": {
-                "username": post.author.username,
-                "name": post.author.name,
-                "surname": post.author.surname,
-                "avatar": post.author.avatar
-            },
-            "created_at": post.created_at,
-            "location": post.location,
-            "status": post.status,
-            "likes": [user.username for user in post.liked_by_users]  # Aquí se usa liked_by_users
-        } for post in posts]), 200
+        result = []
+        for post in posts:
+            liked_by_usernames = [user.username for user in post.liked_by_users]
+            liked = current_user.username in liked_by_usernames
+
+            result.append({
+                "id": post.id,
+                "image": post.image,
+                "message": post.message,
+                "author": {
+                    "id": post.author.id,
+                    "username": post.author.username,
+                    "name": post.author.name,
+                    "surname": post.author.surname,
+                    "avatar": post.author.avatar
+                },
+                "created_at": post.created_at.isoformat(),
+                "location": post.location,
+                "status": post.status,
+                "likes_count": len(liked_by_usernames),
+                "likes": liked_by_usernames,
+                "liked": liked
+            })
+
+        return jsonify(result), 200
     except Exception as e:
         logging.error(f"Error during fetching posts: {e}")
         return jsonify({"error": str(e)}), 500
@@ -130,27 +142,27 @@ def like_post():
             return jsonify({"error": "Post not found"}), 404
 
         if current_user in post.liked_by_users:
-            post.unlike(current_user)
+            post.liked_by_users.remove(current_user)
             message = "Post unliked successfully"
+            liked = False
         else:
-            post.like(current_user)
+            post.liked_by_users.append(current_user)
             message = "Post liked successfully"
+            liked = True
 
         db.session.commit()
 
         return jsonify({
             "message": message,
             "likes": [user.username for user in post.liked_by_users],
-            "last_liked_by": current_user.username
+            "likes_count": post.liked_by_users.count(),
+            "liked": liked
         }), 200
     except Exception as e:
         logging.error(f"Error during liking post: {e}")
         return jsonify({"error": str(e)}), 500
 
 
-@api.route('/test', methods=['GET'])
-def test():
-    return "Hola Mundo", 200
 
 @api.route('/search', methods=['GET'])
 @login_required
@@ -166,21 +178,30 @@ def search_posts():
             (User.surname.ilike(f'%{query}%'))
         ).order_by(Post.created_at.desc()).all()
 
-        return jsonify([{
-            "id": post.id,
-            "image": post.image,
-            "message": post.message,
-            "author": {
-                "username": post.author.username,
-                "name": post.author.name,
-                "surname": post.author.surname,
-                "avatar": post.author.avatar
-            },
-            "created_at": post.created_at,
-            "location": post.location,
-            "status": post.status,
-            "likes": [user.username for user in post.liked_by_users]
-        } for post in posts]), 200
+        result = []
+        for post in posts:
+            liked_by_usernames = [user.username for user in post.liked_by_users]
+            liked = current_user.username in liked_by_usernames
+
+            result.append({
+                "id": post.id,
+                "image": post.image,
+                "message": post.message,
+                "author": {
+                    "username": post.author.username,
+                    "name": post.author.name,
+                    "surname": post.author.surname,
+                    "avatar": post.author.avatar
+                },
+                "created_at": post.created_at.isoformat(),
+                "location": post.location,
+                "status": post.status,
+                "likes_count": len(liked_by_usernames),  # Número total de "likes"
+                "likes": liked_by_usernames,
+                "liked": liked  # Si el usuario actual ha dado "like"
+            })
+
+        return jsonify(result), 200
     except Exception as e:
         logging.error(f"Error during fetching posts: {e}")
         return jsonify({"error": str(e)}), 500

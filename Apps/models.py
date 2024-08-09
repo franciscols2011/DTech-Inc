@@ -1,8 +1,9 @@
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
-from datetime import datetime
+from datetime import datetime, timezone
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import validates
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy.orm import validates, relationship
 
 db = SQLAlchemy()
 
@@ -49,14 +50,14 @@ class Post(db.Model):
     image = db.Column(db.String(255), nullable=False)
     message = db.Column(db.String(500), nullable=False)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    created_at = db.Column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False)
     location = db.Column(db.String(30), nullable=False)
     status = db.Column(db.String(10), nullable=False)
     last_liked_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     last_liked_user = db.relationship('User', foreign_keys=[last_liked_user_id], post_update=True)
     author = db.relationship('User', foreign_keys=[author_id])
-    liked_by_users = db.relationship('User', secondary=post_likes, lazy='dynamic')  # Verifica esta línea
+    liked_by_users = db.relationship('User', secondary=post_likes, lazy='dynamic')
 
     @validates('message')
     def validate_message(self, key, message):
@@ -81,10 +82,7 @@ class Post(db.Model):
     def unlike(self, user):
         if self.is_liked_by(user):
             self.liked_by_users.remove(user)
-            if self.liked_by_users.count() > 0:
-                self.last_liked_user_id = self.liked_by_users[-1].id
-            else:
-                self.last_liked_user_id = None
+            self.last_liked_user_id = None
 
     def is_liked_by(self, user):
         return self.liked_by_users.filter(post_likes.c.user_id == user.id).count() > 0
