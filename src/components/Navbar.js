@@ -1,38 +1,42 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Navbar = ({ handleLogout, handleSearch }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    handleSearch(searchTerm);
-  };
+  const location = useLocation(); // Para obtener la ruta actual
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div className="container-fluid">
-        <Link className="navbar-brand" to="/">DTech Inc</Link>
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <form className="d-flex mx-auto" onSubmit={handleSearchSubmit}>
-            <input className="form-control me-2" type="search" placeholder="Search by Location" aria-label="Search" value={searchTerm} onChange={handleSearchChange} />
-            <button className="btn btn-outline-light" type="submit">Search</button>
-          </form>
-          <ul className="navbar-nav ms-auto">
-            <li className="nav-item">
+        <Link className="navbar-brand" to="/">Dtech Inc</Link>
+        <div className="collapse navbar-collapse">
+          <ul className="navbar-nav me-auto">
+            <li className={`nav-item ${location.pathname === '/posts' ? 'active' : ''}`}>
+              <Link className="nav-link" to="/posts">Posts</Link>
+            </li>
+            <li className={`nav-item ${location.pathname === '/profile' ? 'active' : ''}`}>
+              <Link className="nav-link" to="/profile">Profile</Link>
+            </li>
+            <li className={`nav-item ${location.pathname === '/create' ? 'active' : ''}`}>
               <Link className="nav-link" to="/create">Create Post</Link>
             </li>
-            <li className="nav-item">
-              <button className="btn btn-outline-light nav-link" onClick={handleLogout}>Logout</button>
-            </li>
           </ul>
+          <form className="d-flex">
+            <input 
+              className="form-control me-2" 
+              type="search" 
+              placeholder="Search" 
+              aria-label="Search" 
+              onChange={(e) => handleSearch(e.target.value)} 
+            />
+            <button 
+              className="btn btn-outline-danger" 
+              onClick={handleLogout} 
+              type="button"
+            >
+              Logout
+            </button>
+          </form>
         </div>
       </div>
     </nav>

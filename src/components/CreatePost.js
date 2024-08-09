@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createPost } from '../api';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Autocomplete from 'react-autocomplete';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/styles.css';
@@ -24,6 +24,7 @@ const CreatePost = () => {
   });
   const [locationValue, setLocationValue] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -38,7 +39,14 @@ const CreatePost = () => {
     e.preventDefault();
     try {
       await createPost(formData);
-      navigate('/posts');
+
+      if (location.pathname === '/profile') {
+        navigate(0); // Recarga la página para mostrar el nuevo post en profile
+      } else if (location.pathname === '/posts') {
+        navigate('/posts', { replace: true });
+      } else {
+        navigate('/posts');
+      }
     } catch (error) {
       console.error(error);
     }
@@ -101,12 +109,11 @@ const CreatePost = () => {
                         id: "typeLocation",
                         name: "location",
                         className: "form-control form-control-lg",
-                        style: { marginTop: '-10px' },  // Ajusta este valor para alinear verticalmente con otros inputs
+                        style: { marginTop: '-10px' },
                         required: true
                       }}
                     />
                   </div>
-
                   <div className="form-outline form-white mb-4">
                     <label className="form-label" htmlFor="typeStatus">Status</label>
                     <select

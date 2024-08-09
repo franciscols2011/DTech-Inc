@@ -7,6 +7,7 @@ import Posts from './components/Posts';
 import CreatePost from './components/CreatePost';
 import './styles/styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Profile from './components/Profile';
 
 
 
@@ -18,6 +19,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/posts" element={<Posts />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/create" element={<CreatePost />} />
           <Route path='/' element={<Login />} />
         </Routes>

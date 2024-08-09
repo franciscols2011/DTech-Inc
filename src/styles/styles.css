@@ -2,6 +2,7 @@ body, html {
   height: 100%;
   margin: 0;
   padding: 0;
+  padding-top: 35px;
   font-family: Arial, sans-serif;
   overflow-x: hidden;
   background: #6a11cb;
@@ -19,9 +20,19 @@ body, html {
   background: linear-gradient(to right, #6a11cb, #2575fc);
 }
 
+/* Navbar */
 .navbar-dark .navbar-brand {
   font-size: 1.5rem;
   font-weight: bold;
+}
+
+.navbar-nav .nav-link.active {
+  font-weight: bold;
+  color: #007bff;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #0d77e8;
 }
 
 .dropdown-toggle {
@@ -32,6 +43,8 @@ body, html {
   border-color: #007bff;
 }
 
+
+/* Post Styles */
 .post-list {
   display: flex;
   flex-direction: column;
@@ -43,8 +56,8 @@ body, html {
   background-color: #ffffff;
   border: 1px solid #dbdbdb;
   border-radius: 8px;
-  width: 52%; /* Ajusta el ancho de los posts */
-  max-width: 700px; /* Máximo ancho de los posts */
+  width: 52%;
+  max-width: 700px;
   margin-bottom: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -119,19 +132,19 @@ body, html {
 
 .post-actions .btn-link {
   font-size: 1.25rem;
-  color: #000; /* Color por defecto de los iconos */
+  color: #000;
 }
 
 .post-actions .btn-link .fa-heart {
-  color: #000; /* Color por defecto del corazón */
+  color: #000;
 }
 
 .post-actions .btn-link .fa-heart.text-danger {
-  color: red; /* Color rojo cuando está "likeado" */
+  color: red;
 }
 
 .post-actions .icon {
-  font-size: 1.25rem; /* Ajusta el tamaño de los iconos */
+  font-size: 1.25rem;
   margin-right: 10px;
 }
 
@@ -147,11 +160,11 @@ body, html {
 .post-actions .btn-link .fa-comment,
 .post-actions .btn-link .fa-paper-plane,
 .post-actions .btn-link .fa-bookmark {
-  font-size: 1.25rem; /* Asegura que todos los iconos tengan el mismo tamaño */
+  font-size: 1.25rem;
 }
 
 .post-actions .d-flex .icon {
-  margin-right: 10px; /* Asegura que los iconos dentro del d-flex tengan el mismo espaciado */
+  margin-right: 10px;
 }
 
 .post-actions .d-flex .btn-link {
@@ -174,7 +187,7 @@ body, html {
   color: #555;
 }
 
-/* Nuevos estilos para asegurar la alineación vertical en el formulario */
+/* Form Styles */
 .form-outline {
   display: flex;
   flex-direction: column;
@@ -196,9 +209,104 @@ body, html {
 }
 
 textarea.form-control-lg {
-  height: auto; /* Asegura que el textarea crezca con su contenido */
+  height: auto;
 }
 
 .autocomplete-wrapper {
-  width: 100%; /* Asegura que el campo autocomplete ocupe todo el ancho disponible */
+  width: 100%;
+}
+
+/* Profile Page Styles */
+.profile {
+  background-color: #fafafa;
+  padding-top: 20px;
+}
+
+.profile-avatar {
+  border-radius: 50%;
+  border: 2px solid #333;
+}
+
+hr {
+  border-top: 1px solid #dbdbdb;
+}
+
+.profile .col-4 {
+  padding: 0 5px;
+}
+
+.img-fluid {
+  border-radius: 5px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.img-fluid:hover {
+  transform: scale(1.05);
+}
+
+.profile .container {
+  max-width: 900px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+}
+
+.profile-header img {
+  border-radius: 50%;
+  margin-right: 20px;
+}
+
+.profile-header h2 {
+  margin: 0;
+}
+
+.profile-header p {
+  margin: 0;
+  color: #8e8e8e;
+}
+
+.profile-header .stats {
+  display: flex;
+  gap: 20px;
+}
+
+.profile-header .stats p {
+  margin: 0;
+  font-size: 14px;
+}
+.post-wrapper {
+  border: 1px solid #444;
+  border-radius: 5px;
+  background-color: #fff;
+  overflow: hidden; 
+  height: 350px; 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.post-wrapper img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+}
+
+.post-wrapper .post-message {
+  padding: 10px;
+  text-align: center;
+  font-size: 1rem;
+  color: #333;
+  flex-grow: 1; 
+}
+
+@media (max-width: 767px) {
+  .post-wrapper {
+    height: auto; 
+  }
+
+  .post-wrapper img {
+    height: auto; 
+  }
 }

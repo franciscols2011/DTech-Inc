@@ -56,7 +56,7 @@ class Post(db.Model):
     last_liked_user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     last_liked_user = db.relationship('User', foreign_keys=[last_liked_user_id], post_update=True)
-    author = db.relationship('User', foreign_keys=[author_id])
+    author = db.relationship('User', foreign_keys=[author_id], lazy='joined')
     liked_by_users = db.relationship('User', secondary=post_likes, lazy='dynamic')
 
     @validates('message')

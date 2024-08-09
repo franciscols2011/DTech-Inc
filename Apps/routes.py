@@ -205,3 +205,36 @@ def search_posts():
     except Exception as e:
         logging.error(f"Error during fetching posts: {e}")
         return jsonify({"error": str(e)}), 500
+
+@api.route('/profile', methods=['GET'])
+@login_required
+def get_profile():
+    try:
+        user = current_user
+
+        posts = Post.query.filter_by(author_id=user.id).order_by(Post.created_at.desc()).all()
+
+        result = {
+            "user": {
+                "id": user.id,
+                "avatar": user.avatar,
+                "username": user.username,
+                "name": user.name,
+                "surname": user.surname,
+            },
+            "posts": [{
+                "id": post.id,
+                "image": post.image,
+                "message": post.message,
+                "created_at": post.created_at.isoformat(),
+                "location": post.location,
+                "status": post.status,
+                "likes_count": post.liked_by_users.count(),
+                "liked": current_user in post.liked_by_users
+            } for post in posts]
+        }
+
+        return jsonify(result), 200
+    except Exception as e:
+        logging.error(f"Error during fetching profile: {e}")
+        return jsonify({"error": str(e)}), 500
