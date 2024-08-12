@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom'; // Importar useParams
 import { useAuth } from '../auth/AuthContext';
 import { getProfile } from '../api';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -11,6 +11,7 @@ const Profile = () => {
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { user_id } = useParams(); // Obtener el user_id de la URL
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,7 +22,7 @@ const Profile = () => {
 
     const fetchProfile = async () => {
       try {
-        const response = await getProfile(auth.user.id);
+        const response = await getProfile(user_id); // Usar el user_id de la URL para obtener el perfil correcto
         setProfileData(response.data);
       } catch (error) {
         console.error('Error fetching profile:', error);
@@ -32,7 +33,7 @@ const Profile = () => {
     };
 
     fetchProfile();
-  }, [auth, navigate]);
+  }, [auth, user_id, navigate]); // Añadir user_id como dependencia
 
   const handleLogout = () => {
     setAuth(null);

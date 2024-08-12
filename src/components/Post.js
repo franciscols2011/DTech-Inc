@@ -86,7 +86,12 @@ const Post = React.forwardRef(({ post }, ref) => {
           )}
         </div>
         <div className="post-caption">
-          <p><strong>{post.author.username}</strong> {post.message}</p>
+          <p>
+            <Link to={`/profile/${post.author.id}`} className="text-decoration-none text-dark fw-bold">
+              {post.author.username}
+            </Link> 
+            {' '}{post.message}
+          </p>
         </div>
         <div className="post-time">
           <small>{time}</small>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { createPost } from '../api';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import Autocomplete from 'react-autocomplete';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/styles.css';
@@ -131,7 +131,7 @@ const CreatePost = () => {
                   </div>
                   <button className="btn btn-outline-light btn-lg px-5" type="submit">Create</button>
                 </form>
-                <p className="mb-0 mt-4">Want to see all posts? <a href="/posts" className="text-white-50 fw-bold">View Posts</a></p>
+                <p className="mb-0 mt-4">Want to see all posts? <Link to="/posts" className="text-white-50 fw-bold">View Posts</Link></p>
               </div>
             </div>
           </div>
