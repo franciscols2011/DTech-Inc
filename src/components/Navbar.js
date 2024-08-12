@@ -16,7 +16,7 @@ const Navbar = ({ handleLogout, handleSearch }) => {
             <li className={`nav-item ${location.pathname === '/posts' ? 'active' : ''}`}>
               <Link className="nav-link" to="/posts">Posts</Link>
             </li>
-            {/* Mostrar el enlace "Profile" solo si el usuario está autenticado */}
+            
             {auth && auth.user ? (
               <>
                 <li className={`nav-item ${location.pathname.startsWith('/profile') ? 'active' : ''}`}>

@@ -13,6 +13,7 @@ const locations = [
   { label: 'Bogotá, Colombia' },
   { label: 'Rio de Janeiro, Brazil' },
   { label: 'Madrid, Spain' },
+  
 ];
 
 const CreatePost = () => {
