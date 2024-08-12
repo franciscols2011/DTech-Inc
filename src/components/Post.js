@@ -19,17 +19,14 @@ const Post = React.forwardRef(({ post }, ref) => {
 
   const timeSinceCreation = (dateString) => {
     const postDate = parseISO(dateString);
-  
-    // Ajustar la diferencia horaria (-3 horas)
     const correctedDate = new Date(postDate.getTime() - 3 * 60 * 60 * 1000);
-  
     return formatDistanceToNow(correctedDate, { addSuffix: true, locale: es });
   };
 
   const [time, setTime] = useState(() => timeSinceCreation(post.created_at));
 
   useEffect(() => {
-    if (post.likes && post.likes.includes(currentUser)) {
+    if (post.likes && post.likes.map(like => like.username).includes(currentUser)) {
       setLiked(true);
     }
   }, [post.likes, currentUser]);
@@ -37,9 +34,9 @@ const Post = React.forwardRef(({ post }, ref) => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setTime(timeSinceCreation(post.created_at));
-    }, 60000); 
+    }, 60000);
 
-    return () => clearInterval(intervalId); 
+    return () => clearInterval(intervalId);
   }, [post.created_at]);
 
   const handleLike = async () => {
@@ -59,10 +56,10 @@ const Post = React.forwardRef(({ post }, ref) => {
     <div className="post card mb-4" ref={ref}>
       <div className="post-header card-header d-flex justify-content-between align-items-center">
         <div className="d-flex align-items-center">
-          <Link to={`/user/${post.author.id}`}>
+          <Link to={`/profile/${post.author.id}`}>
             <img src={post.author.avatar} alt="N/P" className="rounded-circle" width="32" height="32" />
           </Link>
-          <Link to={`/user/${post.author.id}`} className="ms-2 text-decoration-none text-dark">
+          <Link to={`/profile/${post.author.id}`} className="ms-2 text-decoration-none text-dark">
             <span className="fw-bold">{post.author.name} {post.author.surname}</span>
           </Link>
         </div>
@@ -82,10 +79,10 @@ const Post = React.forwardRef(({ post }, ref) => {
         </div>
         <div className="post-likes">
           {lastLikedUser && (
-            <span>
-              {`A ${lastLikedUser} le gustó esta publicación`}
+            <Link to={`/profile/${lastLikedUser.id}`} className="text-decoration-none text-dark">
+              {`A ${lastLikedUser.username} le gustó esta publicación`}
               {otherLikesCount > 0 && ` y a ${otherLikesCount} ${otherLikesCount > 1 ? 'personas más' : 'persona más'}`}
-            </span>
+            </Link>
           )}
         </div>
         <div className="post-caption">

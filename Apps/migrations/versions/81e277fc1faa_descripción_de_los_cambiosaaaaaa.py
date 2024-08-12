@@ -1,8 +1,8 @@
-"""Add indexes to post_likes
+"""Descripción de los cambiosaaaaaa
 
-Revision ID: 251213d1faed
+Revision ID: 81e277fc1faa
 Revises: 
-Create Date: 2024-08-08 20:33:57.245736
+Create Date: 2024-08-12 13:07:53.026506
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '251213d1faed'
+revision = '81e277fc1faa'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -36,9 +36,7 @@ def upgrade():
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('location', sa.String(length=30), nullable=False),
     sa.Column('status', sa.String(length=10), nullable=False),
-    sa.Column('last_liked_user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['author_id'], ['user.id'], ),
-    sa.ForeignKeyConstraint(['last_liked_user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('post_likes',

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 import { getProfile } from '../api';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -6,38 +7,59 @@ import '../styles/styles.css';
 import Navbar from './Navbar';
 
 const Profile = () => {
-  const { auth, logout } = useAuth();
+  const { auth, setAuth } = useAuth();
   const [profileData, setProfileData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if (!auth || !auth.user) {
+      navigate('/login');
+      return;
+    }
+
     const fetchProfile = async () => {
       try {
-        const response = await getProfile();
+        const response = await getProfile(auth.user.id);
         setProfileData(response.data);
       } catch (error) {
         console.error('Error fetching profile:', error);
+        setError('No se pudo cargar el perfil. Por favor, intenta nuevamente.');
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchProfile();
-  }, []);
+  }, [auth, navigate]);
 
   const handleLogout = () => {
-    logout();
+    setAuth(null);
+    localStorage.removeItem('auth');
+    navigate('/login');
   };
 
   const handleSearch = (searchTerm) => {
     console.log('Searching for:', searchTerm);
   };
 
-  if (!profileData) {
+  if (loading) {
     return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return (
+      <div>
+        <p>{error}</p>
+        <button onClick={() => window.location.reload()}>Intentar de nuevo</button>
+      </div>
+    );
   }
 
   return (
     <>
       <Navbar handleLogout={handleLogout} handleSearch={handleSearch} />
-
       <section className="profile gradient-custom vh-100">
         <div className="container-lg py-5" style={{ backgroundColor: '#f7f7f7', borderRadius: '10px', maxWidth: '1100px' }}>
           <div className="profile-header mb-4 d-flex align-items-center justify-content-between">
@@ -53,7 +75,6 @@ const Profile = () => {
                 <p className="me-3" style={{ fontSize: '1.2rem' }}><strong>0</strong> seguidores</p>
                 <p style={{ fontSize: '1.2rem' }}><strong>0</strong> seguidos</p>
               </div>
-
             </div>
           </div>
           <hr />

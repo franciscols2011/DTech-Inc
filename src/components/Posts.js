@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Navigate } from 'react-router-dom';
 import { getPosts, logout } from '../api';
 import Post from './Post';
 import { useAuth } from '../auth/AuthContext';
@@ -11,7 +11,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Posts = () => {
   const [posts, setPosts] = useState([]);
-  const { setAuth } = useAuth();
+  const { auth, setAuth } = useAuth(); // Incluye auth aquí
   const navigate = useNavigate();
   const [order, setOrder] = useState('newest');
   const [searchTerm, setSearchTerm] = useState('');
@@ -63,6 +63,11 @@ const Posts = () => {
     },
     [fetchPosts]
   );
+
+  // Redirigir a login si no está autenticado
+  if (!auth || !auth.user) {
+    return <Navigate to="/login" />;
+  }
 
   return (
     <>

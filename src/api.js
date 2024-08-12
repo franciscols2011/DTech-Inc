@@ -16,9 +16,9 @@ export const createPost = (formData) => API.post('/posts', formData);
 export const getPosts = (params) => API.get('/posts', { params });
 export const likePost = (postId) => API.post('/like', { post_id: postId });
 export const logout = () => API.get('/logout');
-export const getProfile = () => API.get('/profile');
+export const getProfile = (userId) => API.get(`/profile/${userId}`);
 
-// Manejo de errores (opcional)
+// Manejo de errores
 API.interceptors.response.use(
   response => response,
   error => {
