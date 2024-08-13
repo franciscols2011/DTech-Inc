@@ -34,9 +34,13 @@ body, html {
 .dropdown-toggle {
   font-size: 0.875rem;
   padding: 0.25rem 0.5rem;
-  color: #ffffff;
+  color: #ffffff !important;
   background-color: #007bff;
   border-color: #007bff;
+}
+
+.dropdown-toggle .fa-filter {
+  margin-right: 0.5rem;
 }
 
 /* Post Styles */

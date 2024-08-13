@@ -11,7 +11,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Posts = () => {
   const [posts, setPosts] = useState([]);
-  const { auth, setAuth } = useAuth(); // Incluye auth aquí
+  const { auth, setAuth } = useAuth();
   const navigate = useNavigate();
   const [order, setOrder] = useState('newest');
   const [searchTerm, setSearchTerm] = useState('');
@@ -34,10 +34,12 @@ const Posts = () => {
 
   const handleOrderChange = (newOrder) => {
     setOrder(newOrder);
+    fetchPosts(); // Volver a obtener los posts con el nuevo orden
   };
 
   const handleSearch = (term) => {
     setSearchTerm(term);
+    fetchPosts(); // Volver a obtener los posts con el término de búsqueda
   };
 
   const handleLogout = async () => {
@@ -71,19 +73,23 @@ const Posts = () => {
 
   return (
     <>
-      <Navbar handleLogout={handleLogout} handleSearch={handleSearch} />
+      <Navbar 
+        handleLogout={handleLogout} 
+        handleSearch={handleSearch} 
+        handleOrderChange={handleOrderChange} // Pasar handleOrderChange al Navbar
+      />
       <section className="vh-100 gradient-custom">
         <div className="container">
           <div className="d-flex justify-content-between mb-4">
             <div className="dropdown ms-auto">
               <button
-                className="btn dropdown-toggle"
+                className="btn btn-outline-light dropdown-toggle" 
                 type="button"
                 id="dropdownMenuButton"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                <FontAwesomeIcon icon={faFilter} />
+                <FontAwesomeIcon icon={faFilter} /> Filter
               </button>
               <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <li>
@@ -105,8 +111,8 @@ const Posts = () => {
                 key={post.id}
                 post={post}
                 ref={index === posts.length - 1 ? lastPostElementRef : null}
-                liked={post.liked} // Pasando el estado "liked" directamente desde el backend
-                likesCount={post.likes_count} // Pasando el número de "likes"
+                liked={post.liked}
+                likesCount={post.likes_count}
               />
             ))}
           </div>
