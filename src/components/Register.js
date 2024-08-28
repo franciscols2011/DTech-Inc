@@ -51,7 +51,7 @@ const Register = () => {
                 <h3 className="mb-5">Register</h3>
                 <form onSubmit={handleSubmit}>
                   <div className="form-outline form-white mb-4">
-                  <label className="form-label" htmlFor="typeAvatar">Avatar URL</label>
+                  <label className="form-label" htmlFor="typeAvatar">Avatar</label>
                     <input
                       type="text"
                       id="typeAvatar"

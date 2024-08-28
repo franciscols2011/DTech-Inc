@@ -17,6 +17,9 @@ export const getPosts = (params) => API.get('/posts', { params });
 export const likePost = (postId) => API.post('/like', { post_id: postId });
 export const logout = () => API.get('/logout');
 export const getProfile = (userId) => API.get(`/profile/${userId}`);
+export const updatePost = (postId, updateData) => API.put(`/posts/${postId}`, updateData);
+export const deletePost =  (postId) => API.delete(`/posts/${postId}`);
+
 
 // Manejo de errores
 API.interceptors.response.use(

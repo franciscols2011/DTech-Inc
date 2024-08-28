@@ -52,6 +52,16 @@ const Posts = () => {
     }
   };
 
+  // Función para manejar la eliminación de un post
+  const handleDelete = (postId) => {
+    setPosts(prevPosts => prevPosts.filter(post => post.id !== postId));
+  };
+
+  // Función para manejar la actualización de un post
+  const handleUpdate = () => {
+    fetchPosts(); // Vuelve a obtener la lista completa de posts después de la actualización
+  };
+
   // Configurar el observador para cargar más posts cuando el último post sea visible
   const lastPostElementRef = useCallback(
     (node) => {
@@ -76,7 +86,7 @@ const Posts = () => {
       <Navbar 
         handleLogout={handleLogout} 
         handleSearch={handleSearch} 
-        handleOrderChange={handleOrderChange} // Pasar handleOrderChange al Navbar
+        handleOrderChange={handleOrderChange}
       />
       <section className="vh-100 gradient-custom">
         <div className="container">
@@ -113,6 +123,8 @@ const Posts = () => {
                 ref={index === posts.length - 1 ? lastPostElementRef : null}
                 liked={post.liked}
                 likesCount={post.likes_count}
+                onDelete={handleDelete}
+                onUpdate={handleUpdate} // Se pasa la función onUpdate al componente Post
               />
             ))}
           </div>

@@ -26,7 +26,7 @@ const Profile = () => {
         setProfileData(response.data);
       } catch (error) {
         console.error('Error fetching profile:', error);
-        setError('No se pudo cargar el perfil. Por favor, intenta nuevamente.');
+        setError('Error fetching profile');
       } finally {
         setLoading(false);
       }
@@ -53,7 +53,7 @@ const Profile = () => {
     return (
       <div>
         <p>{error}</p>
-        <button onClick={() => window.location.reload()}>Intentar de nuevo</button>
+        <button onClick={() => window.location.reload()}>Try Again</button>
       </div>
     );
   }
@@ -72,9 +72,9 @@ const Profile = () => {
             <div className="flex-grow-1 ms-4 d-flex flex-column align-items-start">
               <p className='fw-bold mb-4' style={{ fontSize: '1.75rem', color: '#333' }}>{`${profileData.user.name} ${profileData.user.surname}`}</p>
               <div className="stats d-flex">
-                <p className="me-3" style={{ fontSize: '1.2rem' }}><strong>{profileData.posts.length}</strong> publicaciones</p>
-                <p className="me-3" style={{ fontSize: '1.2rem' }}><strong>0</strong> seguidores</p>
-                <p style={{ fontSize: '1.2rem' }}><strong>0</strong> seguidos</p>
+                <p className="me-3" style={{ fontSize: '1.2rem' }}><strong>{profileData.posts.length}</strong> Posts</p>
+                <p className="me-3" style={{ fontSize: '1.2rem' }}><strong>0</strong> Followers</p>
+                <p style={{ fontSize: '1.2rem' }}><strong>0</strong> Following</p>
               </div>
             </div>
           </div>
@@ -95,7 +95,7 @@ const Profile = () => {
                 </div>
               ))
             ) : (
-              <p className="text-center">No has creado ningún post aún.</p>
+              <p className="text-center">No posts found.</p>
             )}
           </div>
         </div>

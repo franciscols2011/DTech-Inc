@@ -115,20 +115,6 @@ const CreatePost = () => {
                       }}
                     />
                   </div>
-                  <div className="form-outline form-white mb-4">
-                    <label className="form-label" htmlFor="typeStatus">Status</label>
-                    <select
-                      id="typeStatus"
-                      name="status"
-                      className="form-control form-control-lg"
-                      required
-                      onChange={handleChange}
-                    >
-                      <option value="published">Published</option>
-                      <option value="drafted">Drafted</option>
-                      <option value="deleted">Deleted</option>
-                    </select>
-                  </div>
                   <button className="btn btn-outline-light btn-lg px-5" type="submit">Create</button>
                 </form>
                 <p className="mb-0 mt-4">Want to see all posts? <Link to="/posts" className="text-white-50 fw-bold">View Posts</Link></p>

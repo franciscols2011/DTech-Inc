@@ -127,6 +127,53 @@ def get_posts():
     except Exception as e:
         logging.error(f"Error during fetching posts: {e}")
         return jsonify({"error": str(e)}), 500
+    
+
+@api.route('/posts/<int:post_id>', methods=['PUT'])
+@login_required
+def update_post(post_id):
+    try:
+        post = Post.query.get_or_404(post_id)
+        if post.author_id != current_user.id:
+            return jsonify({"error": "You do not have permission to edit this post"}), 403
+
+        data = request.get_json()
+        post.message = data.get('message', post.message)
+        post.location = data.get('location', post.location)
+
+        db.session.commit()
+        return jsonify({
+            "message": "Post updated successfully",
+            "post": {
+                "id": post.id,
+                "message": post.message,
+                "location": post.location,
+            }
+        }), 200
+    except Exception as e:
+        logging.error(f"Error during updating post: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@api.route('/posts/<int:post_id>', methods=['DELETE'])
+@login_required
+def delete_post(post_id):
+    try:
+        logging.info(f"Received DELETE request for post_id: {post_id}")
+        post = Post.query.get_or_404(post_id)
+        logging.info(f"Found post: {post}")
+
+        if post.author_id != current_user.id:
+            return jsonify({"error": "You do not have permission to delete this post"}), 403
+
+        db.session.delete(post)
+        db.session.commit()
+        logging.info(f"Post deleted successfully: {post_id}")
+        
+        return jsonify({"message": "Post deleted successfully"}), 200
+    except Exception as e:
+        logging.error(f"Error during deleting post: {e}")
+        return jsonify({"error": str(e)}), 500
+
 
 @api.route('/like', methods=['POST'])
 @login_required

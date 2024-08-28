@@ -10,7 +10,7 @@ const Navbar = ({ handleLogout, handleSearch, handleOrderChange }) => {
   const { auth } = useAuth(); 
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top ">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/posts">Dtech Inc</Link>
         <div className="collapse navbar-collapse">
